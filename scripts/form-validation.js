@@ -1,20 +1,43 @@
 import { showToast } from './toast.js';
 
 export function initFormValidation() {
-  window.addEventListener('spa:navigated', (e) => {
-    if (e.detail.route !== 'contato') return;
+  const STORAGE_KEY = 'contact_draft_v1';
+
+  function saveDraft(form) {
+    const data = {
+      name: form.querySelector('#name')?.value || '',
+      email: form.querySelector('#email')?.value || '',
+      message: form.querySelector('#message')?.value || ''
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  function loadDraft(form) {
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    if (data.name) form.querySelector('#name').value = data.name;
+    if (data.email) form.querySelector('#email').value = data.email;
+    if (data.message) form.querySelector('#message').value = data.message;
+  }
+
+  function setupForm() {
     const form = document.getElementById('contactForm');
     if (!form) return;
 
-    const name = form.querySelector('#name');
-    const email = form.querySelector('#email');
-    const message = form.querySelector('#message');
+    // Carrega o rascunho salvo
+    loadDraft(form);
 
+    // Salva sempre que o usuário digitar
+    form.addEventListener('input', () => saveDraft(form));
+
+    // Validação básica e envio
     form.addEventListener('submit', (ev) => {
       ev.preventDefault();
-      let valid = true;
+      const name = form.querySelector('#name');
+      const email = form.querySelector('#email');
+      const message = form.querySelector('#message');
 
-      form.querySelectorAll('.form-error').forEach(el => el.textContent = '');
+      let valid = true;
+      form.querySelectorAll('.form-error').forEach(e => e.textContent = '');
 
       if (name.value.trim().length < 2) {
         form.querySelector('#name + .form-error').textContent = 'Nome muito curto.';
@@ -22,18 +45,12 @@ export function initFormValidation() {
       }
 
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
-      form.querySelector('#email + .form-error').textContent = 'E-mail inválido.';
-      valid = false;
-      }
-
-
-      if (message.value.trim().length < 10) {
-        form.querySelector('#message + .form-error').textContent = 'Mensagem muito curta.';
+        form.querySelector('#email + .form-error').textContent = 'E-mail inválido.';
         valid = false;
       }
 
-      if (/http|https/.test(message.value)) {
-        form.querySelector('#message + .form-error').textContent = 'Não inclua links na mensagem.';
+      if (message.value.trim().length < 10) {
+        form.querySelector('#message + .form-error').textContent = 'Mensagem muito curta.';
         valid = false;
       }
 
@@ -42,9 +59,18 @@ export function initFormValidation() {
         return;
       }
 
-      showToast('Mensagem enviada com sucesso!');
+      // Limpa o localStorage ao enviar
+      localStorage.removeItem(STORAGE_KEY);
       form.reset();
+      showToast('Mensagem enviada com sucesso!');
     });
-  });
-}
+  }
 
+  // Escuta navegação do SPA e reaplica o comportamento
+  window.addEventListener('spa:navigated', (e) => {
+    if (e.detail.route === 'contato') setupForm();
+  });
+
+  // Também tenta configurar imediatamente (caso a página inicial já seja o contato)
+  setupForm();
+}

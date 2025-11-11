@@ -1,0 +1,89 @@
+:root {
+  --color-bg: #0d0d0d;
+  --color-primary: #e53935;
+  --color-secondary: #512da8;
+  --color-accent: #2196f3;
+  --color-text: #f5f5f5;
+  --color-error: #ff5252;
+  --space: 16px;
+  --radius: 8px;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.site-header {
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+  padding: var(--space);
+}
+
+.nav-list {
+  display: flex;
+  gap: var(--space);
+  list-style: none;
+  padding: 0;
+}
+
+.nav-list a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.nav-list a.active {
+  text-decoration: underline;
+}
+
+.section {
+  padding: 40px 20px;
+}
+
+.form-row {
+  margin-bottom: var(--space);
+  display: flex;
+  flex-direction: column;
+}
+
+input, textarea {
+  border-radius: var(--radius);
+  border: 1px solid #333;
+  padding: 8px;
+  font-size: 16px;
+}
+
+.form-error {
+  color: var(--color-error);
+  font-size: 14px;
+}
+
+.btn {
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  border: none;
+  cursor: pointer;
+  background: var(--color-primary);
+  color: white;
+  transition: 0.3s;
+}
+
+.btn:hover { background: var(--color-secondary); }
+
+.toasts {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.toast {
+  background: rgba(0,0,0,0.8);
+  color: white;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+}

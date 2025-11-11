@@ -21,10 +21,11 @@ export function initFormValidation() {
         valid = false;
       }
 
-      if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email.value)) {
-        form.querySelector('#email + .form-error').textContent = 'E-mail inválido.';
-        valid = false;
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+      form.querySelector('#email + .form-error').textContent = 'E-mail inválido.';
+      valid = false;
       }
+
 
       if (message.value.trim().length < 10) {
         form.querySelector('#message + .form-error').textContent = 'Mensagem muito curta.';
@@ -46,3 +47,4 @@ export function initFormValidation() {
     });
   });
 }
+

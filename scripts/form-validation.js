@@ -39,10 +39,15 @@ export function initFormValidation() {
       let valid = true;
       form.querySelectorAll('.form-error').forEach(e => e.textContent = '');
 
-      if (name.value.trim().length < 2) {
-        form.querySelector('#name + .form-error').textContent = 'Nome muito curto.';
-        valid = false;
-      }
+    const nameValue = name.value.trim();
+
+    // mínimo de 2 caracteres e sem números
+    if (nameValue.length < 2 || !/^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/.test(nameValue)) {
+    form.querySelector('#name + .form-error').textContent =
+    'Nome inválido. Use apenas letras e espaços (mínimo 2 caracteres).';
+    valid = false;
+    }
+
 
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
         form.querySelector('#email + .form-error').textContent = 'E-mail inválido.';
@@ -74,3 +79,4 @@ export function initFormValidation() {
   // Também tenta configurar imediatamente (caso a página inicial já seja o contato)
   setupForm();
 }
+
